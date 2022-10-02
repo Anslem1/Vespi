@@ -2,6 +2,7 @@ const dotenv = require('dotenv')
 const express = require('express')
 const mongoose = require('mongoose')
 const multer = require('multer')
+const cors = require('cors')
 
 const app = express()
 
@@ -33,6 +34,7 @@ app.post('/api/upload', upload.single('file'), (req, res) => {
   res.status(200).json('file uploaded')
 })
 
+app.use(cors())
 app.use('/api/auth', authRoute)
 app.use('/api/users', userRoute)
 app.use('/api/journals', postRoute)
