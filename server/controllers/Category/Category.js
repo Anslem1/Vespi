@@ -1,7 +1,6 @@
 const Category = require('../../models/Category')
 const slugify = require('slugify')
 
-
 function createCategories (categories, parentId = null) {
   const categoryList = []
   let category
@@ -15,6 +14,8 @@ function createCategories (categories, parentId = null) {
       _id: cate._id,
       name: cate.name,
       slug: cate.slug,
+      categoryImage: cate.categoryImage,
+      categoryDesc: cate.categoryDesc,
       children: createCategories(categories, cate._id)
     })
   }
@@ -26,7 +27,9 @@ exports.createCategory = async (req, res) => {
   try {
     const categoryObj = {
       name: req.body.name,
-      slug: slugify(req.body.name)
+      slug: slugify(req.body.name),
+      categoryImage: req.body.categoryImage,
+      categoryDesc: req.body.categoryDesc
     }
     if (req.body.parentId) {
       categoryObj.parentId = req.body.parentId
@@ -49,10 +52,10 @@ exports.getCategory = (req, res) => {
       if (err) return res.status(500).json(err)
       if (categories) {
         const categoryList = createCategories(categories)
-        return res.status(200).json(categoryList)
+        return res.status(200).json({categoryList: categoryList})
       }
     })
   } catch (err) {
-    return res.status(200).json(err)
+    return res.status(400).json(err)
   }
 }

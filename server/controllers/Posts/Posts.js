@@ -4,7 +4,10 @@ const slugify = require('slugify')
 //CREATE  A POST
 
 exports.createPost = async (req, res) => {
+
   const { username, caption, desc, postImage, category } = req.body
+
+  console.log(req.body)
 
   const newPost = new Post({
     username: username,

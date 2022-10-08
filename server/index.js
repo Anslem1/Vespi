@@ -10,6 +10,8 @@ const authRoute = require('./routes/auth')
 const userRoute = require('./routes/users')
 const postRoute = require('./routes/posts')
 const categoryRoute = require('./routes/category')
+const menCategories = require('./routes/menCategory')
+const wommenCategories = require('./routes/WomenCatgory')
 
 app.use(express.json())
 
@@ -39,8 +41,8 @@ app.use('/api/auth', authRoute)
 app.use('/api/users', userRoute)
 app.use('/api/journals', postRoute)
 app.use('/api/categories', categoryRoute)
-// app.use('/api/categories/men', menCategories)
-// app.use('/api/categories/women', womenCategories)
+app.use('/api/categories/women', wommenCategories)
+app.use('/api/categories/men', menCategories)
 
 app.listen('5000', () => {
   console.log('We running backend. Port: 5000')

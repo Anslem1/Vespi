@@ -28,7 +28,7 @@ const PostSchema = new Schema(
       required: true
     },
     category: {
-      type: mongoose.Schema.Types.ObjectId,
+      type: Schema.Types.ObjectId,
       ref: 'Category',
       required: true
     }
@@ -37,4 +37,3 @@ const PostSchema = new Schema(
 )
 
 module.exports = mongoose.model('Post', PostSchema)
-     

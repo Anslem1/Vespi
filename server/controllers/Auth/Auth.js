@@ -13,10 +13,19 @@ exports.registerUser = async (req, res) => {
       password: hashedPassword
     })
 
-    const user = (await User.findOne({ username: req.body.username }))
-      ? 'Username already exists'
-      : await newUser.save()
-    return res.status(200).json(user)
+    // const user =
+
+    //     ? 'Username or email already exists'
+    //     :
+
+    if (
+      (await User.findOne({ username: req.body.username })) ||
+      (await User.findOne({ email: req.body.email }))
+    ) {
+     return res.status(400).json({ message: 'Username or email already exists' })
+    }
+    const user = await newUser.save()
+     res.status(200).json(user)
   } catch (err) {
     return res.status(500).json(err)
   }
@@ -32,18 +41,22 @@ exports.loginUser = async (req, res) => {
         expiresIn: '100d'
       })
       const { password, ...userCreds } = user._doc
+      res.cookie('token', token, { expiresIn: '100d' })
       res.status(200).json({
         token,
         userCreds
       })
-      // var decoded = jwt.verify(process.env.JWT_SECRET, req.body.password)
-      // console.log(decoded) // bar
-    } else {
+    } else if (!validated || !user) {
       return res.status(400).json('Wrong username or password')
     }
   } catch (err) {
-    return res.status(500).json({ error: 'Something went wrong' })
+    return res.status(400).json({ error: 'Something went wrong' })
   }
+}
+
+exports.logoutUser = (req, res) => {
+  res.clearCookie('token')
+  return res.status(200).json({ message: 'Successfully Logged out' })
 }
 
 exports.requireLogin = (req, res, next) => {

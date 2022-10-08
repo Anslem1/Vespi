@@ -1,13 +1,15 @@
 const mongoose = require('mongoose')
 const Schema = mongoose.Schema
 
-const CategorySchema = new Schema(
+const menCategorySchema = new Schema(
   {
     name: { type: String, required: true, trim: true },
     slug: { type: String, required: true },
+    menCategoyImage: { type: String },
+    menCategoyDesc: { type: String },
     parentId: { type: String },
-    categoryImage: { type: String },
-    categoryDesc: { type: String }
+// refPath: 'Post'
+
   },
   { timestamps: true }
 )
@@ -44,4 +46,4 @@ const CategorySchema = new Schema(
 //   }
 // ]
 
-module.exports = mongoose.model('Category', CategorySchema)
+module.exports = mongoose.model('menCategory', menCategorySchema)
