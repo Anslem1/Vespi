@@ -13,7 +13,7 @@ exports.getUser = async (req, res) => {
 }
 
 exports.updateUser = async (req, res) => {
-  if (req.body.userId === req.params.id) {
+  if (req.body._id === req.params.id) {
     if (req.body.password) {
       const salt = await bcrypt.genSalt(12)
       req.body.password = await bcrypt.hash(req.body.password, salt)
@@ -36,12 +36,15 @@ exports.updateUser = async (req, res) => {
 }
 
 exports.deleteUser = async (req, res) => {
-  if (req.body.userId === req.params.id) {
+  if (req.body.id === req.params.id) {
     try {
       const user = await User.findById(req.params.id)
+      console.log(user)
       try {
         await Post.deleteMany({ username: user.username })
-        await User.findByIdAndDelete(req.params.id)
+        await User.findByIdAndDelete(req.params.id, {
+          $set: req.body
+        })
         return res.status(200).json('User Deleted')
       } catch (err) {
         return res.status(500).json(err)
@@ -52,4 +55,3 @@ exports.deleteUser = async (req, res) => {
     ;('Action not allowed')
   }
 }
-  

@@ -18,14 +18,13 @@ exports.registerUser = async (req, res) => {
     //     ? 'Username or email already exists'
     //     :
 
-    if (
-      (await User.findOne({ username: req.body.username })) ||
-      (await User.findOne({ email: req.body.email }))
-    ) {
-     return res.status(400).json({ message: 'Username or email already exists' })
+    if (await User.findOne({ username: req.body.username })) {
+      return res
+        .status(400)
+        .json({ message: 'Username already exists' })
     }
     const user = await newUser.save()
-     res.status(200).json(user)
+    res.status(200).json(user)
   } catch (err) {
     return res.status(500).json(err)
   }

@@ -16,6 +16,7 @@ function createCategories (categories, parentId = null) {
       slug: cate.slug,
       categoryImage: cate.categoryImage,
       categoryDesc: cate.categoryDesc,
+      parentId: cate.parentId,
       children: createCategories(categories, cate._id)
     })
   }
@@ -52,7 +53,7 @@ exports.getCategory = (req, res) => {
       if (err) return res.status(500).json(err)
       if (categories) {
         const categoryList = createCategories(categories)
-        return res.status(200).json({categoryList: categoryList})
+        return res.status(200).json({ categoryList: categoryList })
       }
     })
   } catch (err) {

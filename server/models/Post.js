@@ -6,13 +6,11 @@ const PostSchema = new Schema(
     username: {
       type: String,
       required: true,
-      unique: true
+      unique: false
     },
 
     slug: {
       type: String,
-      unique: true,
-      required: true
     },
 
     caption: {

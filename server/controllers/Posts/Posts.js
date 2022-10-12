@@ -4,15 +4,13 @@ const slugify = require('slugify')
 //CREATE  A POST
 
 exports.createPost = async (req, res) => {
-
+  console.log(req.body)
   const { username, caption, desc, postImage, category } = req.body
 
-  console.log(req.body)
-
   const newPost = new Post({
-    username: username,
+    username,
     slug: slugify(username),
-    postImage: req.file.filename,
+    postImage,
     caption,
     desc,
     category
@@ -20,19 +18,8 @@ exports.createPost = async (req, res) => {
 
   newPost.save((err, post) => {
     err && res.status(400).json({ err })
-    if (post) {
-      res.status(201).json({ post })
-    }
+    post && res.status(201).json({ post })
   })
-
-  // try {
-  //   const savedPost = await newPost.save()
-  //   return res.status(200).json(savedPost)
-  // } catch (err) {
-  //   return res.status(500).json(err)
-  // }
-
-  // res.status(200).json({ file: req.file, body: req.body })
 }
 
 // GET ALL POSTS
@@ -40,8 +27,6 @@ exports.createPost = async (req, res) => {
 exports.getAllPost = async (req, res) => {
   const username = req.query.user
   const categoryName = req.query.category
-
-  console.log(categoryName)
 
   try {
     let posts
@@ -58,7 +43,7 @@ exports.getAllPost = async (req, res) => {
     } else {
       posts = await Post.find()
     }
-    return res.status(200).json(posts)
+    res.status(200).json(posts)
   } catch (err) {
     res.status(500).json(err)
   }

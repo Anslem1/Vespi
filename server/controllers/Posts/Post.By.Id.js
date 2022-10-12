@@ -3,6 +3,10 @@ const Post = require('../../models/Post')
 exports.getPostById = async (req, res) => {
   try {
     const post = await Post.findById(req.params.id)
+      .select(
+        '_id username slug caption desc postImage category createdAt updatedAt'
+      )
+      .populate({ path: 'category', select: '_id name' })
     return res.status(200).json(post)
   } catch (err) {
     res.status(500).json(err)
