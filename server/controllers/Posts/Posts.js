@@ -1,10 +1,10 @@
-const Post = require('../../models/Post')
+const Post = require('../../models/Post.js')
 const slugify = require('slugify')
 
 //CREATE  A POST
 
 exports.createPost = async (req, res) => {
-  console.log(req.body)
+  
   const { username, caption, desc, postImage, category } = req.body
 
   const newPost = new Post({

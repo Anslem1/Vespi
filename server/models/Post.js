@@ -5,14 +5,11 @@ const PostSchema = new Schema(
   {
     username: {
       type: String,
-      required: true,
-      unique: false
+      required: true
     },
-
     slug: {
-      type: String,
+      type: String
     },
-
     caption: {
       type: String,
       required: true
@@ -27,7 +24,7 @@ const PostSchema = new Schema(
     },
     category: {
       type: Schema.Types.ObjectId,
-      ref: 'Category',
+      ref: "Category",
       required: true
     }
   },

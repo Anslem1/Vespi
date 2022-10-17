@@ -27,20 +27,9 @@ exports.initialData = async (req, res) => {
   const categories = await Category.find({}).exec()
   const posts = await Post.find({})
     .select('_id username caption slug desc postImage category')
-    .populate({ path: 'category', select: '_id name' })
-    .exec()
+    .populate({ path: 'category', select: '_id name' }).exec()
   res.status(200).json({
-    categories: createCategories(categories),
+    // categories: createCategories(categories),
     posts
   })
-}
-
-exports.getPostUnderCategory = async (req, res) => {
-  const categories = await Category.find({})
-  const posts = await Post.find({}).populate({
-    path: 'category',
-    select: '_id name children'
-  })
-  // res.status(200).json(posts)
-  res.status(200).json(categories)
 }

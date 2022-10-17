@@ -12,36 +12,6 @@ const CategorySchema = new Schema(
   { timestamps: true }
 )
 
-//
-// category: [
-//   {
-//     men: [
-//       { jeans: [{
-// img: "",
-//   desc: "",
-//   caption: "",
 
-// }] },
-// //       { sweater: [{}] },
-//       {
-//         sweater: ['Clothing', 'clothing', 'clothing']
-//       },
-//       {
-//         sweater: ['Clothing', 'clothing', 'clothing']
-//       }
-//     ]
-//   },
-//   {
-//     women: [
-//       { jeans: ['pictures', 'pictures', 'pictures', 'pictures'] },
-//       {
-//         sweater: ['Clothing', 'clothing', 'clothing']
-//       },
-//       {
-//         sweater: ['Clothing', 'clothing', 'clothing']
-//       }
-//     ]
-//   }
-// ]
 
 module.exports = mongoose.model('Category', CategorySchema)
