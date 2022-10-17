@@ -29,7 +29,7 @@ exports.initialData = async (req, res) => {
     .select('_id username caption slug desc postImage category')
     .populate({ path: 'category', select: '_id name' }).exec()
   res.status(200).json({
-    // categories: createCategories(categories),
+    categories: createCategories(categories),
     posts
   })
 }
