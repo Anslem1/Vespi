@@ -7,6 +7,7 @@ exports.getPostById = async (req, res) => {
         '_id username slug caption desc postImage category createdAt updatedAt'
       )
       .populate({ path: 'category', select: '_id name' })
+      .exec()
     return res.status(200).json(post)
   } catch (err) {
     res.status(500).json(err)
@@ -43,7 +44,6 @@ exports.deletePostById = async (req, res) => {
     if (post.username === req.body.username) {
       try {
         await post.delete()
-
         return res.status(200).json('Post has been successfully deleted')
       } catch (err) {
         return res.status(500).json(err)

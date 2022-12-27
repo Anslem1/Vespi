@@ -13,18 +13,25 @@ exports.registerUser = async (req, res) => {
       password: hashedPassword
     })
 
-    // const user =
-
-    //     ? 'Username or email already exists'
-    //     :
-
     if (await User.findOne({ username: req.body.username })) {
-      return res
-        .status(400)
-        .json({ message: 'Username already exists' })
+      return res.status(400).json({ message: 'Username already exists' })
     }
-    const user = await newUser.save()
-    res.status(200).json(user)
+
+    newUser.save((error, user) => {
+      error && res.status(400).json({ error })
+
+      if (user) {
+        const token = jwt.sign({ _id: user._id }, process.env.JWT_SECRET, {
+          expiresIn: '100d'
+        })
+        const { password, ...userCreds } = user._doc
+
+        res.status(200).json({
+          token,
+          user: userCreds
+        })
+      }
+    })
   } catch (err) {
     return res.status(500).json(err)
   }
@@ -33,23 +40,30 @@ exports.registerUser = async (req, res) => {
 exports.loginUser = async (req, res) => {
   try {
     const user = await User.findOne({ username: req.body.username })
-    // const { password, ...userCreds } = user._doc
     const validated = await bcrypt.compare(req.body.password, user.password)
-    if (validated) {
-      const token = jwt.sign({ _id: user._id }, process.env.JWT_SECRET, {
-        expiresIn: '100d'
-      })
-      const { password, ...userCreds } = user._doc
-      res.cookie('token', token, { expiresIn: '100d' })
-      res.status(200).json({
-        token,
-        userCreds
-      })
-    } else if (!validated || !user) {
-      return res.status(400).json('Wrong username or password')
+    if (user) {
+      if (validated) {
+        const token = jwt.sign({ _id: user._id }, process.env.JWT_SECRET, {
+          expiresIn: '100d'
+        })
+        const { password, ...userCreds } = user._doc
+        res.cookie('token', token, { expiresIn: '100d' })
+        res.status(200).json({
+          token,
+          userCreds
+        })
+      } else {
+        return res.status(400).json({ message: 'Wrong username or password' })
+      }
     }
   } catch (err) {
-    return res.status(400).json({ error: 'Something went wrong' })
+    if (
+      err == "TypeError: Cannot read properties of null (reading 'password')"
+    ) {
+      res.status(400).json({ message: 'We could not find that user' })
+    } else {
+      return res.status(400).json({ err, message: 'from here' })
+    }
   }
 }
 
@@ -64,18 +78,3 @@ exports.requireLogin = (req, res, next) => {
   req.userCreds = user
   next()
 }
-
-// !user || !validated
-//   ? res.status(400).json('Wrong username or password')
-//   : res.status(200).json(userCreds)
-
-// if (!user) {
-//   return res.status(400).json('Wrong credentials')
-// }
-// const validated = await bcrypt.compare(req.body.password, user.password)
-
-// if (!validated) {
-//   return res.status(400).json('Wrong credentials')
-// }
-
-// res.status(200).json(userCreds)

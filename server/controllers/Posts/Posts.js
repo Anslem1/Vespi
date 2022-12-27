@@ -4,8 +4,14 @@ const slugify = require('slugify')
 //CREATE  A POST
 
 exports.createPost = async (req, res) => {
-  
-  const { username, caption, desc, postImage, category } = req.body
+  const { username, caption, desc, category } = req.body
+
+
+
+  let postImage = null
+  if (req.file) {
+    postImage = req.file.path
+  }
 
   const newPost = new Post({
     username,
@@ -15,6 +21,8 @@ exports.createPost = async (req, res) => {
     desc,
     category
   })
+
+
 
   newPost.save((err, post) => {
     err && res.status(400).json({ err })
